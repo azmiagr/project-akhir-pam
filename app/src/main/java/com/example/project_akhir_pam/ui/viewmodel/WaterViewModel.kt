@@ -3,6 +3,7 @@ package com.example.project_akhir_pam.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project_akhir_pam.data.entity.WaterRecord
+import com.example.project_akhir_pam.data.preferences.UserPreferenceRepository
 import com.example.project_akhir_pam.repository.WaterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,9 @@ import java.util.Date
 import java.util.Locale
 
 
-class WaterViewModel(private val repository: WaterRepository) : ViewModel() {
+class WaterViewModel(
+    private val repository: WaterRepository,
+    private val prefRepo: UserPreferenceRepository) : ViewModel() {
     private val _dailyTarget = MutableStateFlow(2000)
     val dailyTarget: StateFlow<Int> = _dailyTarget.asStateFlow()
 
@@ -29,6 +32,13 @@ class WaterViewModel(private val repository: WaterRepository) : ViewModel() {
     init {
         loadTodayTotal()
         loadHistory()
+
+        viewModelScope.launch {
+            prefRepo.getTarget().collect { newTarget ->
+                _dailyTarget.value = newTarget
+                calculateProgress()
+            }
+        }
     }
 
     private fun loadTodayTotal() {
