@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.example.project_akhir_pam.data.database.WaterDatabase
+import com.example.project_akhir_pam.data.preferences.UserPreferenceRepositoryImpl
 import com.example.project_akhir_pam.repository.WaterRepository
 import com.example.project_akhir_pam.ui.view.MainScreen
 import com.example.project_akhir_pam.ui.theme.Project_Akhir_PAMTheme
@@ -25,13 +26,19 @@ class MainActivity : ComponentActivity() {
 
         val database = WaterDatabase.getDatabase(applicationContext)
         val repository = WaterRepository(database.waterDao())
-        val viewModelFactory = WaterViewModelFactory(repository)
+
+        val prefRepo = UserPreferenceRepositoryImpl(applicationContext)
+
+        val viewModelFactory = WaterViewModelFactory(
+            repository = repository,
+            prefRepo = prefRepo
+        )
 
         viewModel = ViewModelProvider(this, viewModelFactory)[WaterViewModel::class.java]
 
         setContent {
             Project_Akhir_PAMTheme {
-                Surface (
+                Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {

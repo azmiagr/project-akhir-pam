@@ -9,13 +9,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.project_akhir_pam.data.preferences.UserPreferenceRepositoryImpl
+import com.example.project_akhir_pam.ui.settings.SettingsScreen
+import com.example.project_akhir_pam.ui.settings.SettingsViewModel
+import com.example.project_akhir_pam.ui.settings.SettingsViewModelFactory
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -81,8 +87,18 @@ fun MainScreen(
             }
 
             composable(Screen.Settings.route) {
-                SettingsScreenPlaceholder()
+                val context = LocalContext.current
+                val repo = UserPreferenceRepositoryImpl(context)
+                val viewModel: SettingsViewModel = viewModel(
+                    factory = SettingsViewModelFactory(repo)
+                )
+
+                SettingsScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
             }
+
         }
     }
 }
@@ -97,13 +113,4 @@ fun HistoryScreenPlaceholder() {
     }
 }
 
-@Composable
-fun SettingsScreenPlaceholder() {
-    Surface(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "Settings Screen\n(Akan diisi oleh Orang 4)",
-            style = MaterialTheme.typography.headlineMedium
-        )
-    }
-}
 
