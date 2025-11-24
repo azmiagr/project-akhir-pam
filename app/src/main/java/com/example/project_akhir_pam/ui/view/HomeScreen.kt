@@ -1,5 +1,6 @@
 package com.example.project_akhir_pam.ui.view
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -10,10 +11,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
+import kotlin.math.sin
 
 @Composable
 fun HomeScreen(
@@ -24,8 +27,23 @@ fun HomeScreen(
     val dailyTarget by viewModel.dailyTarget.collectAsState()
     val progressPercentage by viewModel.progressPercentage.collectAsState()
 
+    val context = LocalContext.current
+
+    var showCustomDialog by remember { mutableStateOf(false) }
+
+    if (showCustomDialog) {
+        CustomWaterDialog(
+            onDismiss = { showCustomDialog = false },
+            onConfirm = { amount ->
+                viewModel.addWater(amount)
+                Toast.makeText(context, "Berhasil menambah $amount ml", Toast.LENGTH_SHORT).show()
+                showCustomDialog = false
+            }
+        )
+    }
+
     val animatedProgress by animateFloatAsState(
-        targetValue = progressPercentage/100f,
+        targetValue = progressPercentage / 100f,
         animationSpec = tween(1000),
         label = "progress_animation"
     )
@@ -37,11 +55,11 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column (
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(top = 32.dp)
         ) {
-            Text (
+            Text(
                 text = "Konsumsi Air Hari Ini",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
@@ -70,17 +88,17 @@ fun HomeScreen(
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
 
-            Column (
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text (
+                Text(
                     text = "$todayTotal ml",
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                Text (
+                Text(
                     text = "dari $dailyTarget ml",
                     fontSize = 18.sp,
                     color = Color.Gray
@@ -88,7 +106,7 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text (
+                Text(
                     text = "${progressPercentage.toInt()}%",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -101,17 +119,17 @@ fun HomeScreen(
             }
         }
 
-        Column (
+        Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text (
+            Text(
                 text = "Tambah cepat",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -132,25 +150,26 @@ fun HomeScreen(
                     onClick = { viewModel.addWater(500) },
                     modifier = Modifier.weight(1f)
                 )
+            }
 
-                Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.secondary
-                    )
-                ) {
-                    Text(
-                        text = "Jumlah Custom",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+            Button(
+                onClick = { showCustomDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text(
+                    text = "Jumlah Custom",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }
@@ -188,4 +207,49 @@ fun QuickAddButton (
             )
         }
     }
+}
+
+@Composable
+fun CustomWaterDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    var amountText by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Masukkan Jumlah Air") },
+        text = {
+            OutlinedTextField(
+                value = amountText,
+                onValueChange = { newValue ->
+                    if (newValue.all { it.isDigit() }) {
+                        amountText = newValue
+                    }
+                },
+                label = { Text("Jumlah (ml)") },
+                singleLine = true,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val amount = amountText.toIntOrNull()
+                    if (amount != null && amount > 0) {
+                        onConfirm(amount)
+                    }
+                }
+            ) {
+                Text("Tambah")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Batal")
+            }
+        }
+    )
 }
