@@ -88,17 +88,22 @@ fun MainScreen(
 
             composable(Screen.Settings.route) {
                 val context = LocalContext.current
-                val repo = UserPreferenceRepositoryImpl(context)
-                val viewModel: SettingsViewModel = viewModel(
+                val repo = remember { UserPreferenceRepositoryImpl(context) }
+
+                val settingsViewModel: SettingsViewModel = viewModel(
                     factory = SettingsViewModelFactory(repo)
                 )
 
+                // setting diubah, nambahin button reminder
                 SettingsScreen(
-                    viewModel = viewModel,
-                    onBack = { navController.popBackStack() }
+                    settingsViewModel = settingsViewModel,
+                    onBack = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    }
                 )
             }
-
         }
     }
 }
@@ -112,5 +117,3 @@ fun HistoryScreenPlaceholder() {
         )
     }
 }
-
-
