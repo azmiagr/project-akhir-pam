@@ -19,7 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.project_akhir_pam.HistoryScreen
-import com.example.project_akhir_pam.data.preferences.UserPreferenceRepositoryImpl
+import com.example.project_akhir_pam.data.database.UserPreferenceDatabase
+import com.example.project_akhir_pam.data.repository.UserPreferenceRepository
 import com.example.project_akhir_pam.ui.settings.SettingsScreen
 import com.example.project_akhir_pam.ui.settings.SettingsViewModel
 import com.example.project_akhir_pam.ui.settings.SettingsViewModelFactory
@@ -89,10 +90,11 @@ fun MainScreen(
 
             composable(Screen.Settings.route) {
                 val context = LocalContext.current
-                val repo = remember { UserPreferenceRepositoryImpl(context) }
-
+                val prefDatabase = remember { UserPreferenceDatabase.getInstance(context) }
+                val prefDao = prefDatabase.userPreferenceDao()
+                val prefRepo = remember { UserPreferenceRepository(prefDao) }
                 val settingsViewModel: SettingsViewModel = viewModel(
-                    factory = SettingsViewModelFactory(repo)
+                    factory = SettingsViewModelFactory(prefRepo)
                 )
 
                 SettingsScreen(
