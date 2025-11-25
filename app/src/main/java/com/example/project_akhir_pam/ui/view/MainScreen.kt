@@ -89,29 +89,21 @@ fun MainScreen(
 
             composable(Screen.Settings.route) {
                 val context = LocalContext.current
-                val repo = UserPreferenceRepositoryImpl(context)
-                val viewModel: SettingsViewModel = viewModel(
+                val repo = remember { UserPreferenceRepositoryImpl(context) }
+
+                val settingsViewModel: SettingsViewModel = viewModel(
                     factory = SettingsViewModelFactory(repo)
                 )
 
                 SettingsScreen(
-                    viewModel = viewModel,
-                    onBack = { navController.popBackStack() }
+                    settingsViewModel = settingsViewModel,
+                    onBack = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    }
                 )
             }
-
         }
     }
 }
-
-@Composable
-fun HistoryScreenPlaceholder() {
-    Surface(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "History Screen\n(Akan diisi oleh Orang 2)",
-            style = MaterialTheme.typography.headlineMedium
-        )
-    }
-}
-
-
