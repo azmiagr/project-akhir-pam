@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.project_akhir_pam.HistoryScreen
 import com.example.project_akhir_pam.data.preferences.UserPreferenceRepositoryImpl
 import com.example.project_akhir_pam.ui.settings.SettingsScreen
 import com.example.project_akhir_pam.ui.settings.SettingsViewModel
@@ -83,7 +84,7 @@ fun MainScreen(
             }
 
             composable(Screen.History.route) {
-                HistoryScreenPlaceholder()
+                HistoryScreen(viewModel = viewModel)
             }
 
             composable(Screen.Settings.route) {
