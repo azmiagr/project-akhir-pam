@@ -2,7 +2,7 @@ package com.example.project_akhir_pam.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.project_akhir_pam.data.preferences.UserPreferenceRepository
+import com.example.project_akhir_pam.data.repository.UserPreferenceRepository
 
 class SettingsViewModelFactory(
     private val repo: UserPreferenceRepository

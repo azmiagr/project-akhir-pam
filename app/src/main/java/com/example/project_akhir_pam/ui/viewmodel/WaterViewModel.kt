@@ -3,7 +3,7 @@ package com.example.project_akhir_pam.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project_akhir_pam.data.entity.WaterRecord
-import com.example.project_akhir_pam.data.preferences.UserPreferenceRepository
+import com.example.project_akhir_pam.data.repository.UserPreferenceRepository
 import com.example.project_akhir_pam.repository.WaterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
