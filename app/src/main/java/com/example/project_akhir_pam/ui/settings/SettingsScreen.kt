@@ -32,9 +32,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    // KITA UBAH NAMA PARAMETER AGAR SESUAI DENGAN MAINSCREEN
     settingsViewModel: SettingsViewModel,
-    // ViewModel ini otomatis terisi, tidak perlu dioper dari MainScreen
     reminderViewModel: ReminderViewModel = viewModel(),
     onBack: () -> Unit
 ) {
@@ -47,12 +45,11 @@ fun SettingsScreen(
         text = target.toString()
     }
 
-    // --- IZIN NOTIFIKASI ---
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (!isGranted) {
-                Toast.makeText(context, "Izin ditolak, alarm tidak akan muncul.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Izin ditolak, notifikasi tidak akan muncul.", Toast.LENGTH_LONG).show()
             }
         }
     )
@@ -64,8 +61,6 @@ fun SettingsScreen(
             }
         }
     }
-
-    // --- TIME PICKER ---
     val calendar = Calendar.getInstance()
     val timePickerDialog = TimePickerDialog(
         context,
@@ -81,7 +76,6 @@ fun SettingsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Pengaturan & Jadwal") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, null) } }
             )
         }
     ) { padding ->
@@ -92,7 +86,6 @@ fun SettingsScreen(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // BAGIAN 1: TARGET MINUM
             item {
                 Text("Target Minum Harian", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
@@ -115,8 +108,6 @@ fun SettingsScreen(
                 ) { Text("Simpan Target") }
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
-
-            // BAGIAN 2: BUTTON TAMBAH REMINDER
             item {
                 Text("Jadwal Pengingat", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
@@ -133,8 +124,6 @@ fun SettingsScreen(
                     Text("Tambah Pengingat Minum")
                 }
             }
-
-            // BAGIAN 3: LIST REMINDER
             if (reminders.isEmpty()) {
                 item {
                     Text("Belum ada pengingat.", color = MaterialTheme.colorScheme.onSurfaceVariant)

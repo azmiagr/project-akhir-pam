@@ -30,7 +30,7 @@ class ShakeSensorImpl(context: Context) : ShakeSensor, SensorEventListener {
         val acceleration = sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH
 
         val now = System.currentTimeMillis()
-        if (acceleration > shakeThreshold && now - lastTime > 800) {
+        if (acceleration > shakeThreshold && now - lastTime > 1200) {
             lastTime = now
             shakeChannel.trySend(Unit)
         }

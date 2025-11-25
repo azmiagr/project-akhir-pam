@@ -59,7 +59,6 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
             set(Calendar.MILLISECOND, 0)
         }
 
-        // set utk besok
         if (calendar.timeInMillis <= System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
@@ -70,9 +69,9 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
                 calendar.timeInMillis,
                 pendingIntent
             )
-            Toast.makeText(context, "Alarm diset jam ${item.hour}:${item.minute}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Notifikasi diset jam ${item.hour}:${item.minute}", Toast.LENGTH_SHORT).show()
         } catch (e: SecurityException) {
-            Toast.makeText(context, "Izin Alarm presisi belum diberikan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Izin notifikasi belum diberikan", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -85,6 +84,6 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.cancel(pendingIntent)
-        Toast.makeText(context, "Alarm dibatalkan", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Notifikasi dibatalkan", Toast.LENGTH_SHORT).show()
     }
 }
