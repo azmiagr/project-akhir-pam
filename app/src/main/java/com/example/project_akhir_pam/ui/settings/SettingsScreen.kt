@@ -61,8 +61,6 @@ fun SettingsScreen(
             }
         }
     }
-
-    // --- TIME PICKER ---
     val calendar = Calendar.getInstance()
     val timePickerDialog = TimePickerDialog(
         context,
@@ -78,7 +76,6 @@ fun SettingsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Pengaturan & Jadwal") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, null) } }
             )
         }
     ) { padding ->
@@ -89,7 +86,6 @@ fun SettingsScreen(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // BAGIAN 1: TARGET MINUM
             item {
                 Text("Target Minum Harian", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
@@ -112,8 +108,6 @@ fun SettingsScreen(
                 ) { Text("Simpan Target") }
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
-
-            // BAGIAN 2: BUTTON TAMBAH REMINDER
             item {
                 Text("Jadwal Pengingat", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
@@ -130,8 +124,6 @@ fun SettingsScreen(
                     Text("Tambah Pengingat Minum")
                 }
             }
-
-            // BAGIAN 3: LIST REMINDER
             if (reminders.isEmpty()) {
                 item {
                     Text("Belum ada pengingat.", color = MaterialTheme.colorScheme.onSurfaceVariant)

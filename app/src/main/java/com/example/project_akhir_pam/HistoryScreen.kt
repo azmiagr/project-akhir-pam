@@ -10,7 +10,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,20 +23,29 @@ import androidx.compose.ui.unit.dp
 import com.example.project_akhir_pam.data.entity.WaterRecord
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(viewModel: WaterViewModel) {
     val history by viewModel.historyRecords.collectAsState()
-
     val sortedHistory = history.sortedByDescending { it.id }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        items(sortedHistory) { record ->
-            HistoryItem(record)
-            Spacer(modifier = Modifier.height(8.dp))
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Riwayat Minum") },
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            items(sortedHistory) { record ->
+                HistoryItem(record)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
