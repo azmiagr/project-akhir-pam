@@ -14,7 +14,7 @@ class UserPreferenceRepositoryImpl(private val context: Context) : UserPreferenc
     private val TARGET_KEY = intPreferencesKey("daily_target")
 
     override fun getTarget(): Flow<Int> =
-        context.dataStore.data.map { prefs -> prefs[TARGET_KEY] ?: 2000 } // default 2000 ml
+        context.dataStore.data.map { prefs -> prefs[TARGET_KEY] ?: 2000 }
 
     override suspend fun setTarget(value: Int) {
         context.dataStore.edit { prefs ->

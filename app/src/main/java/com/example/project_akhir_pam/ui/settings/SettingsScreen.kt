@@ -32,9 +32,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    // KITA UBAH NAMA PARAMETER AGAR SESUAI DENGAN MAINSCREEN
     settingsViewModel: SettingsViewModel,
-    // ViewModel ini otomatis terisi, tidak perlu dioper dari MainScreen
     reminderViewModel: ReminderViewModel = viewModel(),
     onBack: () -> Unit
 ) {
@@ -47,12 +45,11 @@ fun SettingsScreen(
         text = target.toString()
     }
 
-    // --- IZIN NOTIFIKASI ---
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (!isGranted) {
-                Toast.makeText(context, "Izin ditolak, alarm tidak akan muncul.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Izin ditolak, notifikasi tidak akan muncul.", Toast.LENGTH_LONG).show()
             }
         }
     )
