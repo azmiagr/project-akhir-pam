@@ -95,7 +95,6 @@ fun MainScreen(
                     factory = SettingsViewModelFactory(repo)
                 )
 
-                // setting diubah, nambahin button reminder
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
                     onBack = {
@@ -106,15 +105,5 @@ fun MainScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun HistoryScreenPlaceholder() {
-    Surface(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "History Screen\n(Akan diisi oleh Orang 2)",
-            style = MaterialTheme.typography.headlineMedium
-        )
     }
 }
