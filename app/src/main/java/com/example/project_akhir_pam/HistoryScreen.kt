@@ -22,12 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.project_akhir_pam.data.entity.WaterRecord
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(viewModel: WaterViewModel) {
     val history by viewModel.historyRecords.collectAsState()
     val sortedHistory = history.sortedByDescending { it.id }
+
+    // GROUPING per tanggal
+    val groupedHistory = sortedHistory.groupBy { it.tanggal }
 
     Scaffold(
         topBar = {
@@ -36,15 +41,47 @@ fun HistoryScreen(viewModel: WaterViewModel) {
             )
         }
     ) { padding ->
+
         LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            items(sortedHistory) { record ->
-                HistoryItem(record)
-                Spacer(modifier = Modifier.height(8.dp))
+            groupedHistory.forEach { (tanggal, records) ->
+
+                // Header hari / tanggal
+                item {
+                    Text(
+                        text = formatTanggal(tanggal),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
+                }
+
+                // RECAP total minum per hari (skip recap untuk hari ini)
+                val isToday = formatTanggal(tanggal) == "Hari Ini"
+                if (!isToday) {
+                    val total = records.sumOf { it.jumlahAir }
+                    val liter = total / 1000.0
+
+                    item {
+                        Text(
+                            text = "Total minum: ${"%.1f".format(liter)} liter",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                }
+
+                // Tampilkan list item air minum per hari
+                items(records) { record ->
+                    HistoryItem(record)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                // Spacer antar hari
+                item { Spacer(modifier = Modifier.height(16.dp)) }
             }
         }
     }
@@ -73,5 +110,18 @@ fun HistoryItem(record: WaterRecord) {
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+    }
+}
+
+fun formatTanggal(tanggal: String): String {
+    val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+    val date = LocalDate.parse(tanggal, formatter)
+    val today = LocalDate.now()
+    val yesterday = today.minusDays(1)
+
+    return when (date) {
+        today -> "Hari Ini"
+        yesterday -> "Kemarin"
+        else -> date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
     }
 }
