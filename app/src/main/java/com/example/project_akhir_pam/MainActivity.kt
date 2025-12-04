@@ -10,8 +10,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.project_akhir_pam.data.database.UserPreferenceDatabase
 import com.example.project_akhir_pam.data.database.WaterDatabase
-import com.example.project_akhir_pam.data.preferences.UserPreferenceRepositoryImpl
+import com.example.project_akhir_pam.data.repository.UserPreferenceRepository
 import com.example.project_akhir_pam.repository.WaterRepository
 import com.example.project_akhir_pam.sensor.ShakeSensorImpl
 import com.example.project_akhir_pam.sensor.ShakeSensor
@@ -30,11 +31,14 @@ class MainActivity : ComponentActivity() {
 
         val database = WaterDatabase.getDatabase(applicationContext)
         val repository = WaterRepository(database.waterDao())
-        val prefRepo = UserPreferenceRepositoryImpl(applicationContext)
+        val prefDatabase = UserPreferenceDatabase.getInstance(applicationContext)
+        val prefRepo = UserPreferenceRepository(prefDatabase.userPreferenceDao())
+
         val viewModelFactory = WaterViewModelFactory(
             repository = repository,
             prefRepo = prefRepo
         )
+
 
         viewModel = ViewModelProvider(this, viewModelFactory)[WaterViewModel::class.java]
 
