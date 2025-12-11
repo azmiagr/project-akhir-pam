@@ -1,5 +1,4 @@
 package com.example.project_akhir_pam.ui.viewmodel
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project_akhir_pam.data.entity.WaterRecord
@@ -37,11 +36,9 @@ class WaterViewModel(
         viewModelScope.launch {
             prefRepo.getTarget()
                 .catch {
-                    // FIX: Jika error (database kosong), emit default 2000
                     emit(2000)
                 }
                 .collect { newTarget ->
-                    // FIX: Validasi target tidak pernah 0 atau negatif
                     _dailyTarget.value = if (newTarget <= 0) 2000 else newTarget
                     calculateProgress()
                 }
@@ -101,7 +98,6 @@ class WaterViewModel(
     }
 
     fun updateDailyTarget(newTarget: Int) {
-        // Validasi: pastikan target minimal 1
         val validTarget = if (newTarget <= 0) 2000 else newTarget
         _dailyTarget.value = validTarget
         calculateProgress()
