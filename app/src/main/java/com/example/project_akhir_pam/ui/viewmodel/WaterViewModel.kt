@@ -8,6 +8,7 @@ import com.example.project_akhir_pam.repository.WaterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,10 +35,16 @@ class WaterViewModel(
         loadHistory()
 
         viewModelScope.launch {
-            prefRepo.getTarget().collect { newTarget ->
-                _dailyTarget.value = newTarget
-                calculateProgress()
-            }
+            prefRepo.getTarget()
+                .catch {
+                    // FIX: Jika error (database kosong), emit default 2000
+                    emit(2000)
+                }
+                .collect { newTarget ->
+                    // FIX: Validasi target tidak pernah 0 atau negatif
+                    _dailyTarget.value = if (newTarget <= 0) 2000 else newTarget
+                    calculateProgress()
+                }
         }
     }
 
@@ -60,8 +67,20 @@ class WaterViewModel(
     }
 
     private fun calculateProgress() {
-        val progress = (_todayTotal.value.toFloat() / _dailyTarget.value.toFloat()) * 100
-        _progressPercentage.value = progress.coerceIn(0f, 100f)
+        val target = _dailyTarget.value.toFloat()
+        val total = _todayTotal.value.toFloat()
+
+        if (target <= 0) {
+            _progressPercentage.value = 0f
+            return
+        }
+
+        val progress = (total / target) * 100f
+
+        _progressPercentage.value = when {
+            progress.isNaN() || progress.isInfinite() -> 0f
+            else -> progress.coerceIn(0f, 100f)
+        }
     }
 
     fun addWater(amount: Int) {
@@ -82,7 +101,9 @@ class WaterViewModel(
     }
 
     fun updateDailyTarget(newTarget: Int) {
-        _dailyTarget.value = newTarget
+        // Validasi: pastikan target minimal 1
+        val validTarget = if (newTarget <= 0) 2000 else newTarget
+        _dailyTarget.value = validTarget
         calculateProgress()
     }
 

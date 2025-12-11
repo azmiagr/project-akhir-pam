@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
-import kotlin.math.sin
 
 @Composable
 fun HomeScreen(
@@ -42,8 +41,15 @@ fun HomeScreen(
         )
     }
 
+    val safeProgressPercentage = remember(progressPercentage) {
+        when {
+            progressPercentage.isNaN() || progressPercentage.isInfinite() -> 0f
+            else -> progressPercentage.coerceIn(0f, 100f)
+        }
+    }
+
     val animatedProgress by animateFloatAsState(
-        targetValue = progressPercentage / 100f,
+        targetValue = safeProgressPercentage / 100f,
         animationSpec = tween(1000),
         label = "progress_animation"
     )
@@ -81,7 +87,7 @@ fun HomeScreen(
             CircularProgressIndicator(
                 progress = { animatedProgress },
                 modifier = Modifier.fillMaxSize(),
-                color = if (100f <= progressPercentage) {
+                color = if (100f <= safeProgressPercentage) {
                     Color(0xFF4CAF50)
                 } else MaterialTheme.colorScheme.primary,
                 strokeWidth = 20.dp,
@@ -107,10 +113,10 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "${progressPercentage.toInt()}%",
+                    text = "${safeProgressPercentage.toInt()}%",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (100f <= progressPercentage) {
+                    color = if (100f <= safeProgressPercentage) {
                         Color(0xFF4CAF50)
                     } else {
                         MaterialTheme.colorScheme.primary
