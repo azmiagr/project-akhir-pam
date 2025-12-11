@@ -31,7 +31,6 @@ fun HistoryScreen(viewModel: WaterViewModel) {
     val history by viewModel.historyRecords.collectAsState()
     val sortedHistory = history.sortedByDescending { it.id }
 
-    // GROUPING per tanggal
     val groupedHistory = sortedHistory.groupBy { it.tanggal }
 
     Scaffold(
@@ -50,7 +49,6 @@ fun HistoryScreen(viewModel: WaterViewModel) {
         ) {
             groupedHistory.forEach { (tanggal, records) ->
 
-                // Header hari / tanggal
                 item {
                     Text(
                         text = formatTanggal(tanggal),
@@ -59,7 +57,6 @@ fun HistoryScreen(viewModel: WaterViewModel) {
                     )
                 }
 
-                // RECAP total minum per hari (skip recap untuk hari ini)
                 val isToday = formatTanggal(tanggal) == "Hari Ini"
                 if (!isToday) {
                     val total = records.sumOf { it.jumlahAir }
@@ -74,13 +71,11 @@ fun HistoryScreen(viewModel: WaterViewModel) {
                     }
                 }
 
-                // Tampilkan list item air minum per hari
                 items(records) { record ->
                     HistoryItem(record)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                // Spacer antar hari
                 item { Spacer(modifier = Modifier.height(16.dp)) }
             }
         }

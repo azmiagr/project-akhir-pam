@@ -3,11 +3,31 @@ package com.example.project_akhir_pam.ui.view
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
-import kotlin.math.sin
 
 @Composable
 fun HomeScreen(
@@ -42,8 +61,15 @@ fun HomeScreen(
         )
     }
 
+    val safeProgressPercentage = remember(progressPercentage) {
+        when {
+            progressPercentage.isNaN() || progressPercentage.isInfinite() -> 0f
+            else -> progressPercentage.coerceIn(0f, 100f)
+        }
+    }
+
     val animatedProgress by animateFloatAsState(
-        targetValue = progressPercentage / 100f,
+        targetValue = safeProgressPercentage / 100f,
         animationSpec = tween(1000),
         label = "progress_animation"
     )
@@ -81,7 +107,7 @@ fun HomeScreen(
             CircularProgressIndicator(
                 progress = { animatedProgress },
                 modifier = Modifier.fillMaxSize(),
-                color = if (100f <= progressPercentage) {
+                color = if (100f <= safeProgressPercentage) {
                     Color(0xFF4CAF50)
                 } else MaterialTheme.colorScheme.primary,
                 strokeWidth = 20.dp,
@@ -107,10 +133,10 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "${progressPercentage.toInt()}%",
+                    text = "${safeProgressPercentage.toInt()}%",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (100f <= progressPercentage) {
+                    color = if (100f <= safeProgressPercentage) {
                         Color(0xFF4CAF50)
                     } else {
                         MaterialTheme.colorScheme.primary
