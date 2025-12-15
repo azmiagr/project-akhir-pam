@@ -1,4 +1,4 @@
-package com.example.project_akhir_pam.ui.settings
+package com.example.project_akhir_pam.ui.view
 
 import android.Manifest
 import android.app.TimePickerDialog
@@ -52,7 +52,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.project_akhir_pam.reminder.ReminderModel
-import com.example.project_akhir_pam.reminder.ReminderViewModel
+import com.example.project_akhir_pam.ui.viewmodel.SettingsViewModel
+import com.example.project_akhir_pam.ui.viewmodel.ReminderViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
