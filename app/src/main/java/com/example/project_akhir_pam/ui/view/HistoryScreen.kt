@@ -1,4 +1,4 @@
-package com.example.project_akhir_pam
+package com.example.project_akhir_pam.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

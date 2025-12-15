@@ -1,4 +1,4 @@
-package com.example.project_akhir_pam.reminder
+package com.example.project_akhir_pam.ui.viewmodel
 
 import android.app.AlarmManager
 import android.app.Application
@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import com.example.project_akhir_pam.reminder.AlarmReceiver
+import com.example.project_akhir_pam.reminder.ReminderModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

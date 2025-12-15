@@ -1,4 +1,4 @@
-package com.example.project_akhir_pam.ui.settings
+package com.example.project_akhir_pam.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

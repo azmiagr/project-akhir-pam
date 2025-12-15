@@ -23,12 +23,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.project_akhir_pam.HistoryScreen
 import com.example.project_akhir_pam.data.database.UserPreferenceDatabase
 import com.example.project_akhir_pam.data.repository.UserPreferenceRepository
-import com.example.project_akhir_pam.ui.settings.SettingsScreen
-import com.example.project_akhir_pam.ui.settings.SettingsViewModel
-import com.example.project_akhir_pam.ui.settings.SettingsViewModelFactory
+import com.example.project_akhir_pam.ui.viewmodel.SettingsViewModel
+import com.example.project_akhir_pam.ui.viewmodel.SettingsViewModelFactory
 import com.example.project_akhir_pam.ui.viewmodel.WaterViewModel
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
